@@ -16,6 +16,11 @@ func RouterManage() *gin.Engine {
 		manage.DELETE("/:id", api.Manage.Delete)
 		manage.GET("", api.Manage.List)
 		manage.GET("/:id", api.Manage.Info)
+		manage.GET("/groups", api.Manage.Groups)
+	}
+	request := r.Group("/request")
+	{
+		request.POST("/realtime")
 	}
 
 	return r

@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/rand"
 	"regexp"
@@ -106,7 +107,15 @@ func (*callLogic) Handler(c *gin.Context) {
 
 	switch resContentType {
 	case "application/json":
-		c.JSON(200, resData)
+		res := map[string]any{}
+		err := json.Unmarshal([]byte(resData), &res)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+		c.JSON(200, res)
 	case "text/html":
 		c.HTML(200, "index.html", resData)
 	case "text/plain":
