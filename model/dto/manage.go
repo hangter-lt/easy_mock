@@ -1,23 +1,34 @@
 package dto
 
 type ManageCreateReq struct {
-	Name           string              `json:"name"`
-	Group          string              `json:"group"`
-	Path           string              `json:"path"`
-	Methods        []string            `json:"methods"`
-	Params         []ManageCreateParam `json:"params"`
-	ReqContentType string              `json:"req_content_type"`
+	Name           string              `json:"name" binding:"required"`
+	Group          string              `json:"group" binding:"required"`
+	Path           string              `json:"path" binding:"required"`
+	Methods        []string            `json:"methods" binding:"required"`
+	Params         []ManageCreateParam `json:"params" binding:"required"`
+	ReqContentType string              `json:"req_content_type" binding:"required"`
+	Description    string              `json:"description"`
+}
+
+type ManageCreateRes struct {
+	Id string `json:"id"`
+}
+
+type ManageParamReqData struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
 }
 
 type ManageCreateParam struct {
-	Route          []string       `json:"route"`
-	ReqData        map[string]any `json:"req_data"`
-	ResData        string         `json:"res_data"`
-	ResContentType string         `json:"res_content_type"`
+	Route          []string             `json:"route"`
+	ReqDatas       []ManageParamReqData `json:"req_datas"`
+	ResData        string               `json:"res_data" binding:"required"`
+	ResCode        int                  `json:"res_code" binding:"required"`
+	ResContentType string               `json:"res_content_type" binding:"required"`
 }
 
 type ManageUpdateReq struct {
-	Id string `json:"id"`
+	Id string `json:"id" binding:"required"`
 	ManageCreateReq
 }
 
@@ -43,14 +54,16 @@ type ManageInfoRes struct {
 	Methods        []string          `json:"methods"`
 	ReqContentType string            `json:"req_content_type"`
 	Params         []ManageInfoParam `json:"params"`
+	Description    string            `json:"description"`
 }
 
 type ManageInfoParam struct {
-	Id             string         `json:"id"`
-	Route          []string       `json:"route"`
-	ReqData        map[string]any `json:"req_data"`
-	ResData        string         `json:"res_data"`
-	ResContentType string         `json:"res_content_type"`
+	Id             string               `json:"id"`
+	Route          []string             `json:"route"`
+	ReqDatas       []ManageParamReqData `json:"req_datas"`
+	ResCode        int                  `json:"res_code"`
+	ResData        string               `json:"res_data"`
+	ResContentType string               `json:"res_content_type"`
 }
 
 type ManageDeleteReq struct {

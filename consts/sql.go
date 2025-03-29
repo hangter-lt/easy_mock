@@ -10,6 +10,7 @@ const (
 			"path" TEXT NOT NULL,
 			"methods" TEXT NOT NULL,
 			"req_content_type" TEXT,
+			"description" TEXT,
 			PRIMARY KEY ("id" DESC)
 		);
 	`
@@ -22,6 +23,7 @@ const (
 			"req_data" TEXT,
 			"res_content_type" TEXT NOT NULL,
 			"res_data" TEXT,
+			"res_code" INTEGER NOT NULL,
 			PRIMARY KEY ("id")
 		);
 	`
@@ -30,11 +32,11 @@ const (
 // sql预编译
 const (
 	PreSqlCreateApiData = `
-INSERT INTO api_data ("id", "name", "group", "path", "methods", "req_content_type")
-VALUES (?, ?, ?, ?, ?, ?)
+INSERT INTO api_data ("id", "name", "group", "path", "methods", "req_content_type", "description")
+VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 	PreSqlCreateApiParam = `
-INSERT INTO api_param ("id", "api_id", "route", "req_data", "res_data", "res_content_type")
-VALUES (?, ?, ?, ?, ?, ?)
+INSERT INTO api_param ("id", "api_id", "route", "req_data", "res_data", "res_content_type", "res_code")
+VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 )

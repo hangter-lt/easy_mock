@@ -16,7 +16,7 @@ func LoadData() error {
 
 	// 查询所有api_data表数据, 写入全局变量
 	apiDatas, err := global.DB.Query(`
-	SELECT "id", "name", "group", "path", "methods", "req_content_type"
+	SELECT "id", "name", "group", "path", "methods", "req_content_type", "description"
 	FROM api_data;`)
 	if err != nil {
 		return err
@@ -26,7 +26,7 @@ func LoadData() error {
 		var apiData model.ApiData
 		err = apiDatas.Scan(&apiData.Id, &apiData.Name,
 			&apiData.Group, &apiData.Path, &apiData.Methods,
-			&apiData.ReqContentType)
+			&apiData.ReqContentType, &apiData.Description)
 		if err != nil {
 			return err
 		}
@@ -52,12 +52,12 @@ func LoadData() error {
 		}
 		route := strings.Split(routeS, ",")
 		apiParam.Route = route
-		reqData := map[string]any{}
-		err = json.Unmarshal([]byte(reqDataS), &reqData)
+		mapReaData := map[string]any{}
+		err = json.Unmarshal([]byte(reqDataS), &mapReaData)
 		if err != nil {
 			return err
 		}
-		apiParam.ReqData = reqData
+		apiParam.ReqData = mapReaData
 
 		global.ApiParam[apiParam.Id] = apiParam
 
@@ -66,7 +66,7 @@ func LoadData() error {
 			routeAny = append(routeAny, r)
 		}
 		path := global.ApiData[apiParam.ApiId].Path
-		if len(route) != 0 {
+		if len(route) > 1 {
 			path = fmt.Sprintf(path, routeAny...)
 		}
 
