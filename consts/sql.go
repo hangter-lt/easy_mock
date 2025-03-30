@@ -27,6 +27,23 @@ const (
 			PRIMARY KEY ("id")
 		);
 	`
+
+	SqlCreateRequest = `
+		CREATE TABLE requests (
+			id TEXT PRIMARY KEY,
+			req_time INTEGER NOT NULL,
+			is_match INTEGER NOT NULL,
+			req_addr TEXT NOT NULL,
+			req_headers TEXT,
+			req_data TEXT,
+			req_path TEXT NOT NULL,
+			req_method TEXT NOT NULL,
+			res_headers TEXT,
+			res_data TEXT,
+			res_status INTEGER NOT NULL,
+			api_id TEXT
+		);
+	`
 )
 
 // sql预编译

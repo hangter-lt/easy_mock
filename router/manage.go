@@ -21,6 +21,8 @@ func RouterManage() *gin.Engine {
 	request := r.Group("/request")
 	{
 		request.POST("/realtime")
+		request.GET("/:id")
+		request.GET("historys")
 	}
 
 	return r

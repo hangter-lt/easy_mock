@@ -18,7 +18,12 @@ type callLogic struct{}
 var Call = callLogic{}
 
 func (*callLogic) Handler(c *gin.Context) {
+
+	isMatch := false
+	defer c.Set("is_match", isMatch)
+
 	reqParam := fmt.Sprintf("%s:%s:%s", c.Request.Method, c.ContentType(), c.Request.URL.Path)
+	fmt.Printf("reqParam: %v\n", reqParam)
 
 	paramIds := []string{}
 	for k := range global.ReqParam {
@@ -28,64 +33,22 @@ func (*callLogic) Handler(c *gin.Context) {
 		}
 	}
 
+	// 未命中api
 	if len(paramIds) == 0 {
 		return
 	}
 
-	// 确认请求类型
-	reqContentType := global.ApiData[global.ApiParam[paramIds[0]].ApiId].ReqContentType
-	// reqContentType := "application/json"
+	// TODO: 确认请求类型
 
 	req := make(map[string]any)
-	switch reqContentType {
-	case "application/json":
-		err := c.ShouldBindJSON(&req)
-		if err != nil {
-			fmt.Printf("err: %v\n", err)
-			return
-		}
-	case "application/x-www-form-urlencoded":
-		err := c.Request.ParseForm()
-		if err != nil {
-			fmt.Printf("err: %v\n", err)
-			return
-		}
-		for k, v := range c.Request.Form {
-			if len(v) == 1 {
-				req[k] = v[0]
-			} else {
-				req[k] = v
-			}
-		}
-	case "":
-		err := c.Request.ParseForm()
-		if err != nil {
-			fmt.Printf("err: %v\n", err)
-			return
-		}
-		for k, v := range c.Request.Form {
-			if len(v) == 1 {
-				req[k] = v[0]
-			} else {
-				req[k] = v
-			}
-		}
-	case "multipart/form-data":
-		err := c.Request.ParseMultipartForm(10 << 20)
-		if err != nil {
-			fmt.Printf("err: %v\n", err)
-			return
-		}
-		for k, v := range c.Request.MultipartForm.Value {
-			if len(v) == 1 {
-				req[k] = v[0]
-			} else {
-				req[k] = v
-			}
-		}
+	reqData, _ := c.Get("req_data")
+	fmt.Printf("reqData: %v\n", reqData)
+	err := json.Unmarshal(reqData.([]byte), &req)
+	if err != nil {
+		return
 	}
 
-	fmt.Printf("req: %+v\n", req)
+	fmt.Printf("req: %v\n", req)
 
 	// 参数匹配
 	targetParamIds := []string{}
@@ -100,6 +63,8 @@ func (*callLogic) Handler(c *gin.Context) {
 		return
 	}
 
+	isMatch = true
+
 	rand.NewSource(time.Now().UnixNano())
 	index := rand.Intn(len(targetParamIds))
 	resContentType := global.ApiParam[targetParamIds[index]].ResContentType
@@ -110,9 +75,7 @@ func (*callLogic) Handler(c *gin.Context) {
 		res := map[string]any{}
 		err := json.Unmarshal([]byte(resData), &res)
 		if err != nil {
-			c.JSON(500, gin.H{
-				"message": err.Error(),
-			})
+			c.String(200, string(resData))
 			return
 		}
 		c.JSON(200, res)

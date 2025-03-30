@@ -29,5 +29,10 @@ func InitDB() error {
 		return err
 	}
 
+	_, err = db.Exec(consts.SqlCreateRequest)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

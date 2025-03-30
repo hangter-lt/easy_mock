@@ -147,7 +147,6 @@ const rules = reactive<FormRules<Form>>({
     name: [{ required: true, message: '请输入接口名称', trigger: 'blur' }],
     group: [{ required: true, message: '请选择分组或输入新分组', trigger: 'blur' }],
     methods: [{ required: true, message: '请选择请求方法', trigger: 'change' }],
-    req_content_type: [{ required: true, message: '请选择请求类型', trigger: 'blur' }],
     path: [{ required: true, message: '请输入接口路径', trigger: 'blur' }],
 })
 
@@ -220,6 +219,7 @@ const groups = ref([])
 const methods = ["GET", "POST", "DELETE", "PUT", "PATCH", "HEAD", "OPTIONS", "CONNECT", "TRACE"]
 
 const content_types = [
+    '',
     'application/json',
     'multipart/form-data',
     'application/x-www-form-urlencoded',

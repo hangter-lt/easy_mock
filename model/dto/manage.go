@@ -6,7 +6,7 @@ type ManageCreateReq struct {
 	Path           string              `json:"path" binding:"required"`
 	Methods        []string            `json:"methods" binding:"required"`
 	Params         []ManageCreateParam `json:"params" binding:"required"`
-	ReqContentType string              `json:"req_content_type" binding:"required"`
+	ReqContentType string              `json:"req_content_type"`
 	Description    string              `json:"description"`
 }
 
