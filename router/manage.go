@@ -20,7 +20,7 @@ func RouterManage() *gin.Engine {
 	}
 	request := r.Group("/request")
 	{
-		request.POST("/realtime")
+		request.GET("/realtime", api.Request.RealTime)
 		request.GET("/:id")
 		request.GET("historys")
 	}

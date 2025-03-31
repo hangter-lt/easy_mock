@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type ApiData struct {
 	Id             string `json:"id"`

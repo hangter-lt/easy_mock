@@ -117,5 +117,14 @@ func RequestLogger() gin.HandlerFunc {
 		if err != nil {
 			fmt.Printf("Failed to save request: %v\n", err)
 		}
+
+		global.ChanListMutex.RLock()
+		for _, cl := range global.ChanList {
+			cl.C <- reqID
+		}
+		global.ChanListMutex.RUnlock()
+
+		fmt.Printf("reqID: %v\n", reqID)
+		global.CircularQueue.Push(reqID)
 	}
 }

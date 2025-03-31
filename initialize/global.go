@@ -14,4 +14,6 @@ func InitGlobal() {
 
 	reqParam := map[string][]string{}
 	global.ReqParam = reqParam
+
+	global.CircularQueue = model.NewCircularQueue(10)
 }

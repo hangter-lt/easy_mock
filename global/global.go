@@ -2,6 +2,7 @@ package global
 
 import (
 	"database/sql"
+	"sync"
 
 	"github.com/hangter-lt/easy_mock/model"
 )
@@ -15,4 +16,9 @@ var (
 	ReqParam map[string][]string
 	// 存放参数id和内容的对应关系
 	ApiParam map[string]model.ApiParam
+	// 存放chan结构体指针
+	ChanList      []*model.RealTimeChan
+	ChanListMutex sync.RWMutex
+	// 循环队列
+	CircularQueue *model.CircularQueue
 )
