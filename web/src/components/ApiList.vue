@@ -1,28 +1,30 @@
 <template>
-    <div class="addmenu">
-        <RouterLink to="/apiedit/create">
-            <el-button type="primary">创建</el-button>
-        </RouterLink>
-    </div>
+    <div style="padding: 20px;">
+        <div class="addmenu">
+            <RouterLink to="/apiedit/create">
+                <el-button type="primary">创建</el-button>
+            </RouterLink>
+        </div>
 
-    <div>
-        <el-collapse v-model="activeNames">
-            <el-collapse-item v-for="(group, groupIndex) in res.data" :title="groupIndex" :name="groupIndex">
-                <div class="card-container">
-                    <RouterLink :to="'/apiinfo/'+item.id" v-for="(item, itemIndex) in group" :key="itemIndex" >
-                        <el-card class="card-item">
-                            <el-text>{{ item.name }}</el-text>
-                            <br />
-                            <el-tag v-for="method in item.methods" type="primary">{{ method }}</el-tag>
-                            <br />
-                            <el-text>{{ item.path }}</el-text>
-                            <br />
-                            <el-text>{{ item.req_content_type }}</el-text>
-                        </el-card>
-                    </RouterLink>
-                </div>
-            </el-collapse-item>
-        </el-collapse>
+        <div>
+            <el-collapse v-model="activeNames">
+                <el-collapse-item v-for="(group, groupIndex) in res.data" :title="groupIndex" :name="groupIndex">
+                    <div class="card-container">
+                        <RouterLink :to="'/apiinfo/' + item.id" v-for="(item, itemIndex) in group" :key="itemIndex">
+                            <el-card class="card-item">
+                                <el-text>{{ item.name }}</el-text>
+                                <br />
+                                <el-tag v-for="method in item.methods" type="primary">{{ method }}</el-tag>
+                                <br />
+                                <el-text>{{ item.path }}</el-text>
+                                <br />
+                                <el-text>{{ item.req_content_type }}</el-text>
+                            </el-card>
+                        </RouterLink>
+                    </div>
+                </el-collapse-item>
+            </el-collapse>
+        </div>
     </div>
 </template>
 

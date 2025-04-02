@@ -21,7 +21,7 @@ func RouterManage() *gin.Engine {
 	request := r.Group("/request")
 	{
 		request.GET("/realtime", api.Request.RealTime)
-		request.GET("/:id")
+		request.GET("/:id", api.Request.Info)
 		request.GET("historys")
 	}
 

@@ -1,6 +1,7 @@
 <template>
-    <div class="menu">
-        <RouterLink to="/apilist">
+    <div style="padding: 20px;">
+        <div class="menu">
+            <RouterLink to="/apilist">
                 <el-button text>返回</el-button>
             </RouterLink>
             <RouterLink :to="'/apiedit/' + form.id">
@@ -29,7 +30,7 @@
                                 <el-checkbox-button disabled v-for="method in methods" :key="method" :value="method">
                                     {{ method }}
                                 </el-checkbox-button>
-                            </el-checkbox-group> 
+                            </el-checkbox-group>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -38,48 +39,49 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-            <el-form-item label="路径">
-                <el-input disabled v-model="form.path" placeholder="输入api地址" />
-            </el-form-item>
+                <el-form-item label="路径">
+                    <el-input disabled v-model="form.path" placeholder="输入api地址" />
+                </el-form-item>
 
-            <el-form-item label="描述">
-                <el-input disabled v-model="form.description" type="textarea" />
-            </el-form-item>
-        </el-card>
-        <el-card v-for="item in form.params">
-            <template #header>
-                <div class="card-header">
-                    <span>请求&响应</span>
-                </div>
-            </template>
-            <el-row :gutter="20">
-                <el-col :span="10">
-                    <el-form-item label="请求参数">
-                        <el-row :gutter="10" v-for="reqData in item.req_datas" :key="reqData.key">
-                            <!-- gutter 用于设置列之间的间距 -->
-                            <el-col :span="8">
-                                <el-input disabled v-model="reqData.key" placeholder="key" />
-                            </el-col>
-                            <el-col :span="14">
-                                <el-input disabled v-model="reqData.value" placeholder="value" />
-                            </el-col>
-                        </el-row>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="14">
-                    <el-form-item label="响应码">
-                        <el-input disabled v-model="item.res_code" />
-                    </el-form-item>
-                    <el-form-item label="响应类型">
-                        <el-input disabled v-model="item.res_content_type"></el-input>
-                    </el-form-item>
-                    <el-form-item label="响应内容">
-                        <el-input disabled v-model="item.res_data" type="textarea" />
-                    </el-form-item>
-                </el-col>
-            </el-row>
-        </el-card>
-    </el-form>
+                <el-form-item label="描述">
+                    <el-input disabled v-model="form.description" type="textarea" />
+                </el-form-item>
+            </el-card>
+            <el-card v-for="item in form.params">
+                <template #header>
+                    <div class="card-header">
+                        <span>请求&响应</span>
+                    </div>
+                </template>
+                <el-row :gutter="20">
+                    <el-col :span="10">
+                        <el-form-item label="请求参数">
+                            <el-row :gutter="10" v-for="reqData in item.req_datas" :key="reqData.key">
+                                <!-- gutter 用于设置列之间的间距 -->
+                                <el-col :span="8">
+                                    <el-input disabled v-model="reqData.key" placeholder="key" />
+                                </el-col>
+                                <el-col :span="14">
+                                    <el-input disabled v-model="reqData.value" placeholder="value" />
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="14">
+                        <el-form-item label="响应码">
+                            <el-input disabled v-model="item.res_code" />
+                        </el-form-item>
+                        <el-form-item label="响应类型">
+                            <el-input disabled v-model="item.res_content_type"></el-input>
+                        </el-form-item>
+                        <el-form-item label="响应内容">
+                            <el-input disabled v-model="item.res_data" type="textarea" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-card>
+        </el-form>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -160,5 +162,4 @@ axios.get('/manages/' + route.params.id).then(res => {
     border-color: var(--el-color-primary);
     color: #ffffff;
 }
-
 </style>

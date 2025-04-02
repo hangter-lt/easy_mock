@@ -1,132 +1,134 @@
 <template>
 
-    <div class="menu">
-        <el-button @click="btnCancel" text>返回</el-button>
-        <el-button type="primary" v-if="route.params.id === 'create'" @click="btnCreate">创建</el-button>
-        <el-button type="primary" v-else @click="btnUpdate">更新</el-button>
-    </div>
+    <div style="padding: 20px;">
+        <div class="menu">
+            <el-button @click="btnCancel" text>返回</el-button>
+            <el-button type="primary" v-if="route.params.id === 'create'" @click="btnCreate">创建</el-button>
+            <el-button type="primary" v-else @click="btnUpdate">更新</el-button>
+        </div>
 
-    <el-form ref="formRef" :model="form" label-width="auto" :rules="rules">
-        <el-card style="padding-top: 20px;">
-            <el-row :gutter="20">
-                <el-col :span="16">
-                    <el-form-item label="名称" prop="name">
-                        <el-input v-model="form.name" />
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="分组" prop="group">
-                        <el-select v-model="form.group" filterable allow-create default-first-option placeholder="选择分组">
-                            <el-option v-for="item in groups" :key="item" :label="item" :value="item" />
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="20">
-                <el-col :span="16">
-                    <el-form-item label="方法" prop="methods">
-                        <el-checkbox-group v-model="form.methods">x
-                            <el-checkbox-button v-for="method in methods" :key="method" :value="method">
-                                {{ method }}
-                            </el-checkbox-button>
-                        </el-checkbox-group>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="请求类型" prop="req_content_type">
-                        <el-select v-model="form.req_content_type" placeholder="选择请求类型">
-                            <el-option v-for="item in content_types" :key="item" :label="item" :value="item" />
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-form-item label="路径" prop="path">
-                <el-input v-model="form.path" placeholder="输入api地址">
-                    <template #suffix>
-                        <el-button @click="btnAddRoute" type="text">填充路由参数</el-button>
-                    </template>
-                </el-input>
-            </el-form-item>
+        <el-form ref="formRef" :model="form" label-width="auto" :rules="rules">
+            <el-card style="padding-top: 20px;">
+                <el-row :gutter="20">
+                    <el-col :span="16">
+                        <el-form-item label="名称" prop="name">
+                            <el-input v-model="form.name" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="分组" prop="group">
+                            <el-select v-model="form.group" filterable allow-create default-first-option
+                                placeholder="选择分组">
+                                <el-option v-for="item in groups" :key="item" :label="item" :value="item" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="16">
+                        <el-form-item label="方法" prop="methods">
+                            <el-checkbox-group v-model="form.methods">x
+                                <el-checkbox-button v-for="method in methods" :key="method" :value="method">
+                                    {{ method }}
+                                </el-checkbox-button>
+                            </el-checkbox-group>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="请求类型" prop="req_content_type">
+                            <el-select v-model="form.req_content_type" placeholder="选择请求类型">
+                                <el-option v-for="item in content_types" :key="item" :label="item" :value="item" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-form-item label="路径" prop="path">
+                    <el-input v-model="form.path" placeholder="输入api地址">
+                        <template #suffix>
+                            <el-button @click="btnAddRoute" type="text">填充路由参数</el-button>
+                        </template>
+                    </el-input>
+                </el-form-item>
 
-            <el-form-item label="描述">
-                <el-input v-model="form.description" type="textarea" />
-            </el-form-item>
-        </el-card>
-        <el-card v-for="(item, itemIndex) in form.params">
-            <template #header>
-                <div class="card-header">
-                    <span>请求&响应</span>
-                    <el-icon @click="removeParam(itemIndex)" style="float: right;">
-                        <Delete />
-                    </el-icon>
-                </div>
-            </template>
-            <el-row :gutter="20">
-                <el-col :span="10">
-                    <el-form-item label="路由参数" v-if="item.route.length > 0">
-                        <!-- 根据item.route动态生成input -->
-                        <div v-for="(_, routeIndex) in item.route">
-                            <el-form-item :prop="`params.${itemIndex}.route.${routeIndex}`"
-                                :rules="[{ required: true, message: '请输入路由参数', trigger: 'blur' }]">
-                                <el-input v-model="item.route[routeIndex]" :placeholder="'route' + routeIndex" />
-                            </el-form-item>
-                        </div>
-                    </el-form-item>
-
-                    <el-form-item label="请求参数">
-                        <el-row :gutter="10" v-for="(reqData, reqDataIndex) in item.req_datas" :key="reqData.key">
-                            <!-- gutter 用于设置列之间的间距 -->
-                            <el-col :span="8">
-                                <el-form-item :prop="`params.${itemIndex}.req_datas.${reqDataIndex}.key`"
-                                    :rules="[{ required: true, message: '请输入key', trigger: 'blur' }]">
-                                    <el-input v-model="reqData.key" placeholder="key" />
+                <el-form-item label="描述">
+                    <el-input v-model="form.description" type="textarea" />
+                </el-form-item>
+            </el-card>
+            <el-card v-for="(item, itemIndex) in form.params">
+                <template #header>
+                    <div class="card-header">
+                        <span>请求&响应</span>
+                        <el-icon @click="removeParam(itemIndex)" style="float: right;">
+                            <Delete />
+                        </el-icon>
+                    </div>
+                </template>
+                <el-row :gutter="20">
+                    <el-col :span="10">
+                        <el-form-item label="路由参数" v-if="item.route.length > 0">
+                            <!-- 根据item.route动态生成input -->
+                            <div v-for="(_, routeIndex) in item.route">
+                                <el-form-item :prop="`params.${itemIndex}.route.${routeIndex}`"
+                                    :rules="[{ required: true, message: '请输入路由参数', trigger: 'blur' }]">
+                                    <el-input v-model="item.route[routeIndex]" :placeholder="'route' + routeIndex" />
                                 </el-form-item>
-                            </el-col>
-                            <el-col :span="14">
-                                <el-form-item :prop="`params.${itemIndex}.req_datas.${reqDataIndex}.key`"
-                                    :rules="[{ required: true, message: '请输入value', trigger: 'blur' }]">
-                                    <el-input v-model="reqData.value" placeholder="value" />
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="1">
-                                <el-icon @click="addReqData(itemIndex, reqDataIndex)">
+                            </div>
+                        </el-form-item>
+
+                        <el-form-item label="请求参数">
+                            <el-row :gutter="10" v-for="(reqData, reqDataIndex) in item.req_datas" :key="reqData.key">
+                                <!-- gutter 用于设置列之间的间距 -->
+                                <el-col :span="8">
+                                    <el-form-item :prop="`params.${itemIndex}.req_datas.${reqDataIndex}.key`"
+                                        :rules="[{ required: true, message: '请输入key', trigger: 'blur' }]">
+                                        <el-input v-model="reqData.key" placeholder="key" />
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="14">
+                                    <el-form-item :prop="`params.${itemIndex}.req_datas.${reqDataIndex}.key`"
+                                        :rules="[{ required: true, message: '请输入value', trigger: 'blur' }]">
+                                        <el-input v-model="reqData.value" placeholder="value" />
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="1">
+                                    <el-icon @click="addReqData(itemIndex, reqDataIndex)">
+                                        <Plus />
+                                    </el-icon>
+                                </el-col>
+                                <el-col :span="1">
+                                    <el-icon @click="removeReqData(itemIndex, reqDataIndex)">
+                                        <Delete />
+                                    </el-icon>
+                                </el-col>
+                            </el-row>
+                            <el-col v-if="item.req_datas.length === 0">
+                                <el-icon @click="addReqData(itemIndex, 0)">
                                     <Plus />
                                 </el-icon>
                             </el-col>
-                            <el-col :span="1">
-                                <el-icon @click="removeReqData(itemIndex, reqDataIndex)">
-                                    <Delete />
-                                </el-icon>
-                            </el-col>
-                        </el-row>
-                        <el-col v-if="item.req_datas.length === 0">
-                            <el-icon @click="addReqData(itemIndex, 0)">
-                                <Plus />
-                            </el-icon>
-                        </el-col>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="14">
-                    <el-form-item label="响应码" :prop="`params.${itemIndex}.res_code`"
-                        :rules="[{ required: true, message: '响应码不能为空', trigger: 'blur' }]">
-                        <el-input v-model="item.res_code" type="number" />
-                    </el-form-item>
-                    <el-form-item label="响应类型" :prop="`params.${itemIndex}.res_content_type`"
-                        :rules="[{ required: true, message: '请选择响应类型', trigger: 'change' }]">
-                        <el-select v-model="item.res_content_type" placeholder="选择响应类型">
-                            <el-option v-for="item in content_types" :key="item" :label="item" :value="item" />
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="响应内容" :prop="`params.${itemIndex}.res_data`"
-                        :rules="[{ required: true, message: '响应内容不能为空', trigger: 'blur' }]">
-                        <el-input v-model="item.res_data" type="textarea" />
-                    </el-form-item>
-                </el-col>
-            </el-row>
-        </el-card>
-        <el-button class="add-param-btn" @click="addParam">+</el-button>
-    </el-form>
-
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="14">
+                        <el-form-item label="响应码" :prop="`params.${itemIndex}.res_code`"
+                            :rules="[{ required: true, message: '响应码不能为空', trigger: 'blur' }]">
+                            <el-input v-model="item.res_code" type="number" />
+                        </el-form-item>
+                        <el-form-item label="响应类型" :prop="`params.${itemIndex}.res_content_type`"
+                            :rules="[{ required: true, message: '请选择响应类型', trigger: 'change' }]">
+                            <el-select v-model="item.res_content_type" placeholder="选择响应类型">
+                                <el-option v-for="item in content_types" :key="item" :label="item" :value="item" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="响应内容" :prop="`params.${itemIndex}.res_data`"
+                            :rules="[{ required: true, message: '响应内容不能为空', trigger: 'blur' }]">
+                            <el-input v-model="item.res_data" type="textarea" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-card>
+            <el-button class="add-param-btn" @click="addParam">+</el-button>
+        </el-form>
+    </div>
 </template>
 
 <script lang="ts" setup>

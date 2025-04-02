@@ -19,5 +19,7 @@ import Menu from './components/Menu.vue';
 </template>
 
 <style scoped>
-
+.el-main {
+  padding: 0;
+}
 </style>
